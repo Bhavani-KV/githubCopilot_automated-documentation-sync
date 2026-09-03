@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Package Delivery Tracker</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2a35;
+      --muted: #62717b;
+      --paper: #f7f4ed;
+      --panel: #ffffff;
+      --accent: #d95d39;
+      --accent-dark: #ae4024;
+      --line: #d9dfdc;
+      --success: #26735b;
+      --error: #a52f2f;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--ink);
+      background: linear-gradient(135deg, #f7f4ed, #e6efeb);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    main {
+      width: min(100%, 560px);
+      padding: clamp(28px, 6vw, 56px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 45px rgba(29, 42, 53, 0.12);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font: 700 0.76rem/1.2 Arial, sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 3.4rem);
+      line-height: 1;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      margin-top: 34px;
+    }
+
+    label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    input,
+    button {
+      min-height: 48px;
+      border-radius: 0;
+      font: 700 1rem Arial, sans-serif;
+    }
+
+    input {
+      min-width: 0;
+      flex: 1;
+      padding: 0 14px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: #fbfcfa;
+    }
+
+    input:focus,
+    button:focus-visible {
+      outline: 3px solid rgba(217, 93, 57, 0.3);
+      outline-offset: 2px;
+    }
+
+    button {
+      padding: 0 20px;
+      color: #fff;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+    }
+
+    [hidden] {
+      display: none;
+    }
+
+    .result,
+    .error {
+      margin-top: 28px;
+      padding: 18px;
+      border-left: 4px solid;
+      font-family: Arial, sans-serif;
+    }
+
+    .result {
+      border-color: var(--success);
+      background: #edf7f2;
+    }
+
+    .error {
+      color: var(--error);
+      border-color: var(--error);
+      background: #fff1ef;
+    }
+
+    .result p {
+      margin: 0 0 8px;
+    }
+
+    .result p:last-child {
+      margin-bottom: 0;
+    }
+
+    .result strong {
+      display: inline-block;
+      min-width: 126px;
+    }
+
+    .status {
+      color: var(--success);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Delivery lookup</p>
+    <h1>Track your package</h1>
+
+    <form id="tracking-form">
+      <label for="tracking-number">Tracking number</label>
+      <input id="tracking-number" name="tracking-number" type="text" placeholder="Enter tracking number" required>
+      <button type="submit">Track</button>
+    </form>
+
+    <section id="result" class="result" aria-live="polite" hidden>
+      <p><strong>Tracking number</strong> <span id="result-number"></span></p>
+      <p><strong>Delivery status</strong> <span id="result-status" class="status"></span></p>
+    </section>
+
+    <p id="error" class="error" role="alert" hidden>Tracking number not found.</p>
+  </main>
+
+  <script>
+    const deliveryStatuses = {
+      "TRK-1001": "Order Received",
+      "TRK-1002": "In Transit",
+      "TRK-1003": "Out for Delivery",
+      "TRK-1004": "Delivered"
+    };
+
+    const form = document.getElementById("tracking-form");
+    const trackingNumber = document.getElementById("tracking-number");
+    const result = document.getElementById("result");
+    const resultNumber = document.getElementById("result-number");
+    const resultStatus = document.getElementById("result-status");
+    const error = document.getElementById("error");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const enteredNumber = trackingNumber.value.trim().toUpperCase();
+      const status = deliveryStatuses[enteredNumber];
+      const found = Boolean(status);
+
+      result.hidden = !found;
+      error.hidden = found;
+
+      if (found) {
+        resultNumber.textContent = enteredNumber;
+        resultStatus.textContent = status;
+      }
+    });
+  </script>
+</body>
+</html>
