@@ -153,7 +153,7 @@
 
     <form id="tracking-form">
       <label for="tracking-number">Tracking number</label>
-      <input id="tracking-number" name="tracking-number" type="text" placeholder="Enter tracking number" required>
+      <input id="tracking-number" name="tracking-number" type="text" placeholder="Enter tracking number">
       <button type="submit">Track</button>
     </form>
 
@@ -183,7 +183,7 @@
     form.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const enteredNumber = trackingNumber.value.trim().toUpperCase();
+      const enteredNumber = trackingNumber.value.trim();
       const status = deliveryStatuses[enteredNumber];
       const found = Boolean(status);
 
